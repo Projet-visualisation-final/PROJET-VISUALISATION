@@ -1,67 +1,97 @@
 <html>
 
-</html>
 <!-- Code from d3-graph-gallery.com -->
 <!DOCTYPE html>
 
-<head></head>
-<meta charset="utf-8">
+<head>
+  <meta charset="utf-8">
 
-<!-- Load d3.js and the geo projection plugin -->
-<script src="https://d3js.org/d3.v4.js"></script>
-<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3-scale-radial.js"></script>
-
+  <!-- Load d3.js and the geo projection plugin -->
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3-scale-radial.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+    <!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+<!-- Bootstrap core CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+<!-- Material Design Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.16.0/css/mdb.min.css" rel="stylesheet">
 </head>
 
 <body>
-  <form>
-  
-    <select class="form-control col-md-4" id="choix" onchange="bubble()">
-      <option selected disabled value="">Choisir une annee</option>
-      <option>2000</option>
-      <option>2001</option>
-      <option>2002</option>
-      <option>2003</option>
-      <option>2004</option>
-      <option>2005</option>
-      <option>2006</option>
-      <option>2007</option>
-      <option>2008</option>
-      <option>2009</option>
-      <option>2010</option>
-      <option>2011</option>
-      <option>2012</option>
-    </select>
-  </form>
-  <p>cliquez sur un pays dans la carte!!!</p>
-  <p>survolez le barplot pour avoir un net appercu sur le nombre de cas</p>
-  <!-- Create an element where the map will take place -->
-  <div class="row">
-    <div class="col-md-7 card shadow">
-      <div class="card-header text-center"><h4>Carte de la cedeao</h4></div>
-      <svg id="my_dataviz" style="background-color: rgb(190, 189, 189);" width="805" height="450"></svg>
-    </div>
-    
-    <div class="col-md-5 text-center" id="barplot">
-      <h4>repartition du cholera dans chaque pays</h4>
-    </div>
+  <div class="col-sm-8 col-md-6 col-lg-5 container mt-2">
+    <button type="button" class="btn btn-info btn-rounded" onclick="carte()">Carte interactive</button>
+    <button type="button" class="btn btn-info btn-rounded" onclick="barplot()">Barplot interactive</button>
   </div>
-  <div class="row">
-    <div class="col-md-6" id="legend">
-      
-    </div>
-  
-    <div class="col-md-6" id="chartbar">
+  <div class="container text-center mt-2">
+    <h4 id="message"></h4>
+    <p id="action"></p>
+  </div>
+  <div class="col-md-4 container" id="dropdown">
+  </div>
 
+
+
+
+  <!--   
+  <p>cliquez sur un pays dans la carte!!!</p>
+  <p>survolez le barplot pour avoir un net appercu sur le nombre de cas</p> -->
+  <!-- Create an element where the map will take place -->
+  <div class="col-md-10 card shadow container mt-3 mb-3" id="my_dataviz">
+    <div class="col-sm-8 col-md-6 col-lg-5 align-self-center" id="load">
+      <div class="spinner-grow text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-secondary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-success" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-warning" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-info" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-light" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-dark" role="status">
+      <span class="sr-only">Loading...</span>
     </div>
   </div>
+</div>
+
+
   
-  <div id="tooltip"></div>
+
+
+  <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div id="modal" class="modal-content">
+
+      </div>
+    </div>
+  </div>
+
 </body>
 <script src="cholera.js"></script>
 
